@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal Letter Helper</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Professional Nepal government letter writing tool with 80+ letter formats. Create official letters offline!">
+    <meta name="keywords" content="Nepal, letter, government, सरकारी पत्र, निवेदन, सिफारिस, offline, PWA">
+    <meta name="author" content="Nepal Letter Helper">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- PWA Theme Colors -->
+    <meta name="theme-color" content="#0066cc">
+    <meta name="msapplication-TileColor" content="#0066cc">
+    <meta name="msapplication-navbutton-color" content="#0066cc">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- PWA Display -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Nepal Letters">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="script.js" as="script">
+    
+    <!-- Google Fonts for Nepali Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalimati:wght@400;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">NP</div>
+            <div class="logo-text">
+                <h1 data-translate="Nepal Letter Helper">Nepal Letter Helper</h1>
+                <p data-translate="Digital Document Solutions">Digital Document Solutions</p>
+            </div>
+        </div>
+        
+        <div class="header-buttons">
+            <button id="langToggle" class="btn">नेपाली</button>
+            <button id="darkToggle" class="btn">🌙</button>
+        </div>
+    </header>
+
+    <!-- Global Search Bar -->
+    <div class="search-section">
+        <div class="search-container">
+            <input type="text" id="globalSearch" class="search-input" placeholder="Search letters... / पत्र खोज्नुहोस्..." data-translate-placeholder="Search letters... / पत्र खोज्नुहोस्...">
+            <button class="search-btn" onclick="app.performSearch()">🔍</button>
+        </div>
+        <div id="searchResults" class="search-results"></div>
+    </div>
+
+    <!-- 3-Step Process Guide -->
+    <div class="process-guide">
+        <h2 data-translate="How to Create Your Letter">How to Create Your Letter</h2>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3 data-translate="Select Letter Type">Select Letter Type</h3>
+                    <p data-translate="Choose from 16+ government letter formats">Choose from 16+ government letter formats</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3 data-translate="Fill Required Details">Fill Required Details</h3>
+                    <p data-translate="Enter your information in bilingual forms">Enter your information in bilingual forms</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3 data-translate="Preview & Download">Preview & Download</h3>
+                    <p data-translate="Review and download in government format">Review and download in government format</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning -->
+    <div class="warning">
+        <h2 data-translate="IMPORTANT DISCLAIMER">IMPORTANT DISCLAIMER</h2>
+        <p data-translate="This is an independent digital assistance platform. We are NOT affiliated with the Government of Nepal. This tool helps prepare letters and resources only. Final verification and submission must be done on official government websites.">
+            This is an independent digital assistance platform. We are NOT affiliated with the Government of Nepal. This tool helps prepare letters and resources only. Final verification and submission must be done on official government websites.
+        </p>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <h1 data-translate="What do you need help with today?">What do you need help with today?</h1>
+        <p data-translate="Professional letter writing and government form preparation made simple">Professional letter writing and government form preparation made simple</p>
+
+        <!-- Letters Section -->
+        <div class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h2 data-translate="Nepal Letter Writing System">Nepal Letter Writing System</h2>
+                    <p data-translate="Create official letters following Nepal government format with professional templates">Create official letters following Nepal government format with professional templates</p>
+                </div>
+                <button onclick="app.showAllLetterCategories()" class="btn btn-primary" style="white-space: nowrap;">
+                    📋 Browse All 80+ Letters
+                </button>
+            </div>
+            
+            <div class="grid">
+                <!-- Government Letters -->
+                <div>
+                    <h3 data-translate="Government Letters">Government Letters</h3>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Official letters to government offices</p>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="nibedan_patra">
+                                <div class="letter-header">
+                                    <span class="letter-title">निवेदन पत्र (Application Letter)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">General application to government office</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="anurodh_patra">
+                                <div class="letter-header">
+                                    <span class="letter-title">अनुरोध पत्र (Request Letter)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Formal request to authorities</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="sifarish_patra">
+                                <div class="letter-header">
+                                    <span class="letter-title">सिफारिस पत्र (Recommendation Letter)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Request for official recommendation</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="gunaso_patra">
+                                <div class="letter-header">
+                                    <span class="letter-title">गुनासो पत्र (Complaint Letter)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Official complaint letter</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="ujuri_patra">
+                                <div class="letter-header">
+                                    <span class="letter-title">उजुरी पत्र (Formal Complaint Letter)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Formal complaint to higher authorities</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="suchana_patra">
+                                <div class="letter-header">
+                                    <span class="letter-title">सूचना पत्र (Notice Letter)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Official notice or information letter</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Local Government Letters -->
+                <div>
+                    <h3 data-translate="Local Government Letters">Local Government Letters</h3>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Ward office and municipality letters</p>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="nagarikta_sifarish">
+                                <div class="letter-header">
+                                    <span class="letter-title">नागरिकता सिफारिस पत्र (Citizenship Recommendation)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Citizenship recommendation from ward office</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="basaibas_praman">
+                                <div class="letter-header">
+                                    <span class="letter-title">बसोबास प्रमाणपत्र (Residence Certificate)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Proof of residence certificate</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="aaya_praman">
+                                <div class="letter-header">
+                                    <span class="letter-title">आय प्रमाणपत्र (Income Certificate)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Income certificate from local government</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="janma_darta">
+                                <div class="letter-header">
+                                    <span class="letter-title">जन्म दर्ता निवेदन (Birth Registration)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Birth registration application</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="nata_praman">
+                                <div class="letter-header">
+                                    <span class="letter-title">नाता प्रमाणपत्र (Relationship Certificate)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Family relationship certificate</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Education Letters -->
+                <div>
+                    <h3 data-translate="Education Letters">Education Letters</h3>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">School, college and academic letters</p>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="bida_nibedan_school">
+                                <div class="letter-header">
+                                    <span class="letter-title">बिदा निवेदन (Leave Application)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">School/College leave application</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="pravesh_avedan">
+                                <div class="letter-header">
+                                    <span class="letter-title">प्रवेश आवेदन पत्र (Admission Application)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">School/College admission application</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="chhatrabritti_avedan">
+                                <div class="letter-header">
+                                    <span class="letter-title">छात्रवृत्ति आवेदन पत्र (Scholarship Application)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Scholarship application letter</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="charitrik_praman">
+                                <div class="letter-header">
+                                    <span class="letter-title">चारित्रिक प्रमाणपत्र (Character Certificate)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Character certificate request</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="transfer_praman">
+                                <div class="letter-header">
+                                    <span class="letter-title">ट्रान्सफर प्रमाणपत्र (Transfer Certificate)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Transfer certificate request</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Employment Letters -->
+                <div>
+                    <h3 data-translate="Employment Letters">Employment Letters</h3>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Job and workplace letters</p>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="rojgar_avedan">
+                                <div class="letter-header">
+                                    <span class="letter-title">रोजगार आवेदन पत्र (Job Application)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Job application letter</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="bida_nibedan_office">
+                                <div class="letter-header">
+                                    <span class="letter-title">बिदा निवेदन (Leave Application - Work)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Office leave application</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="rajinama_patra">
+                                <div class="letter-header">
+                                    <span class="letter-title">राजीनामा पत्र (Resignation Letter)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Resignation from job</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="padonnati_nibedan">
+                                <div class="letter-header">
+                                    <span class="letter-title">पदोन्नति निवेदन (Promotion Request)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Request for job promotion</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="talab_bridhi_nibedan">
+                                <div class="letter-header">
+                                    <span class="letter-title">तलब वृद्धि निवेदन (Salary Increment Request)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Request for salary increase</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Banking & Financial Letters -->
+                <div>
+                    <h3 data-translate="Banking & Financial Letters">Banking & Financial Letters</h3>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Bank and financial service letters</p>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="khata_kholne">
+                                <div class="letter-header">
+                                    <span class="letter-title">खाता खोल्ने निवेदन (Bank Account Opening)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Bank account opening request</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="rin_avedan">
+                                <div class="letter-header">
+                                    <span class="letter-title">ऋण आवेदन पत्र (Loan Application)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Bank loan application</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="khata_banda_garne">
+                                <div class="letter-header">
+                                    <span class="letter-title">खाता बन्द गर्ने निवेदन (Account Closure)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Bank account closure request</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="atm_haraeko">
+                                <div class="letter-header">
+                                    <span class="letter-title">एटिएम हराएको निवेदन (Lost ATM Request)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Lost ATM card report</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Foreign / Embassy / Passport Letters -->
+                <div>
+                    <h3 data-translate="Foreign / Embassy / Passport Letters">Foreign / Embassy / Passport Letters</h3>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">International and passport related letters</p>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="rahdani_avedan">
+                                <div class="letter-header">
+                                    <span class="letter-title">राहदानी आवेदन पत्र (Passport Application)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Passport application letter</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="visa_avedan">
+                                <div class="letter-header">
+                                    <span class="letter-title">भिसा आवेदन पत्र (Visa Application)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Visa application letter</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="noc_letter">
+                                <div class="letter-header">
+                                    <span class="letter-title">नो अब्जेक्शन लेटर (NOC)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">No objection certificate</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-letter-type="bidesh_rojgar_nibedan">
+                                <div class="letter-header">
+                                    <span class="letter-title">विदेश रोजगार निवेदन (Foreign Employment)</span>
+                                    <div class="trust-indicators">
+                                        <span class="trust-badge">🏛 Government Format</span>
+                                        <span class="trust-badge">✔ Official Structure</span>
+                                    </div>
+                                </div>
+                                <div class="service-description">Foreign employment application</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Section -->
+        <div class="section">
+            <h2 data-translate="Government Form Resource Builder">Government Form Resource Builder</h2>
+            <p data-translate="Professional tools to create required resources for government form applications">Professional tools to create required resources for government form applications</p>
+            
+            <div class="grid">
+                <div>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-tool-type="passport-photo">
+                                Passport Photo Maker
+                                <div class="service-description">Create 35mm × 45mm Nepal standard photos</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-tool-type="passport-full-photo">
+                                Passport Size Photo Maker (Full Photo)
+                                <div class="service-description">Upload full photo and create passport size automatically</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-tool-type="photo-compressor">
+                                Photo Compressor
+                                <div class="service-description">Compress photos to 50KB/100KB requirements</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-tool-type="signature-maker">
+                                Digital Signature Maker
+                                <div class="service-description">Create digital signatures for documents</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-tool-type="pdf-maker">
+                                PDF Document Maker
+                                <div class="service-description">Convert text to PDF format</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-tool-type="date-converter">
+                                Date Converter (AD ↔ BS)
+                                <div class="service-description">Convert English to Nepali dates</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checklists Section -->
+        <div class="section">
+            <h2 data-translate="Government Form Checklists">Government Form Checklists</h2>
+            <p data-translate="Get comprehensive checklists for any Nepal government form application">Get comprehensive checklists for any Nepal government form application</p>
+            
+            <div class="grid">
+                <div>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-checklist-type="passport">
+                                Passport Application
+                                <div class="service-description">Complete document checklist</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-checklist-type="citizenship">
+                                Citizenship Certificate
+                                <div class="service-description">Required documents list</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-checklist-type="pan">
+                                PAN Card Application
+                                <div class="service-description">Tax registration documents</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-checklist-type="license">
+                                Driving License
+                                <div class="service-description">License application requirements</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="#" class="service-link" data-checklist-type="loksewa">
+                                Loksewa Exam
+                                <div class="service-description">Public service exam preparation</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Official Portals Section -->
+        <div class="section">
+            <h2 data-translate="Official Government Portals">Official Government Portals</h2>
+            <p data-translate="Access official Nepal government websites for final submission">Access official Nepal government websites for final submission</p>
+            
+            <div class="grid">
+                <div>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="https://nagarikapp.gov.np" target="_blank" class="service-link">
+                                Nagarik App Portal
+                                <div class="service-description">nagarikapp.gov.np</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="https://citizenportal.donidcr.gov.np" target="_blank" class="service-link">
+                                Citizen Portal
+                                <div class="service-description">citizenportal.donidcr.gov.np</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="service-list">
+                        <li class="service-item">
+                            <a href="https://psc.gov.np" target="_blank" class="service-link">
+                                Public Service Commission
+                                <div class="service-description">psc.gov.np</div>
+                            </a>
+                        </li>
+                        <li class="service-item">
+                            <a href="https://www.immigration.gov.np" target="_blank" class="service-link">
+                                Immigration Department
+                                <div class="service-description">immigration.gov.np</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Sticky Create Letter Button -->
+    <div class="mobile-sticky-btn">
+        <button class="sticky-create-btn" onclick="app.showAllLetterCategories()">
+            <span data-translate="Browse All Letters">Browse All Letters</span>
+            📋
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#" onclick="app.showHelp()">Help Guide</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Use</a>
+        </div>
+        <p>© 2024 Nepal Letter Helper. Built for the people of Nepal.</p>
+        <p><strong>Unofficial Tool</strong> - Always verify documents with official government offices before submission.</p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title"></h2>
+                <button class="modal-close" onclick="app.closeModal()">×</button>
+            </div>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Register Service Worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker registered successfully:', registration.scope);
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version available
+                                    showUpdateNotification();
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('❌ Service Worker registration failed:', error);
+                    });
+            });
+        }
+        
+        // PWA Install Prompt
+        let deferredPrompt;
+        let installButton;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('💡 PWA install prompt available');
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+        
+        // Show install button
+        function showInstallButton() {
+            if (!installButton) {
+                installButton = document.createElement('button');
+                installButton.innerHTML = '📱 Install App / एप इन्स्टल गर्नुहोस्';
+                installButton.className = 'btn btn-primary install-btn';
+                installButton.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    z-index: 1000;
+                    padding: 12px 20px;
+                    border-radius: 25px;
+                    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+                    animation: pulse 2s infinite;
+                `;
+                
+                installButton.addEventListener('click', installPWA);
+                document.body.appendChild(installButton);
+                
+                // Add pulse animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes pulse {
+                        0% { transform: scale(1); }
+                        50% { transform: scale(1.05); }
+                        100% { transform: scale(1); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        // Install PWA
+        async function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    console.log('✅ PWA installed successfully');
+                    hideInstallButton();
+                } else {
+                    console.log('❌ PWA installation declined');
+                }
+                
+                deferredPrompt = null;
+            }
+        }
+        
+        // Hide install button
+        function hideInstallButton() {
+            if (installButton) {
+                installButton.remove();
+                installButton = null;
+            }
+        }
+        
+        // Show update notification
+        function showUpdateNotification() {
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="position: fixed; top: 20px; right: 20px; background: #0066cc; color: white; padding: 15px 20px; border-radius: 8px; z-index: 1001; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    <div style="margin-bottom: 10px;">🔄 New version available!</div>
+                    <div style="margin-bottom: 10px; font-size: 14px;">नयाँ संस्करण उपलब्ध छ!</div>
+                    <button onclick="window.location.reload()" style="background: white; color: #0066cc; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-right: 10px;">Update / अपडेट गर्नुहोस्</button>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: transparent; color: white; border: 1px solid white; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Later / पछि</button>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 10000);
+        }
+        
+        // Handle app installed event
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('✅ PWA was installed successfully');
+            hideInstallButton();
+            
+            // Show success message
+            if (window.app && window.app.openModal) {
+                window.app.openModal('🎉 App Installed Successfully!', `
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 60px; margin-bottom: 20px;">📱</div>
+                        <h3 style="color: #0066cc; margin-bottom: 15px;">Nepal Letter Helper Installed!</h3>
+                        <p style="margin-bottom: 15px;">नेपाल पत्र सहायक सफलतापूर्वक इन्स्टल भयो!</p>
+                        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                            <h4 style="color: #0066cc; margin-bottom: 10px;">✅ Now you can:</h4>
+                            <ul style="text-align: left; margin-left: 20px;">
+                                <li>Access from home screen</li>
+                                <li>Work completely offline</li>
+                                <li>Faster loading times</li>
+                                <li>Native app experience</li>
+                            </ul>
+                        </div>
+                        <button onclick="app.closeModal()" class="btn btn-primary">Start Using / प्रयोग सुरु गर्नुहोस्</button>
+                    </div>
+                `);
+            }
+        });
+        
+        // Offline/Online status handling
+        window.addEventListener('online', () => {
+            console.log('🌐 Back online');
+            showConnectionStatus('Online', '🌐 Connected / जडान भयो', '#4CAF50');
+        });
+        
+        window.addEventListener('offline', () => {
+            console.log('📱 Gone offline');
+            showConnectionStatus('Offline', '📱 Offline Mode / अफलाइन मोड', '#FF9800');
+        });
+        
+        // Show connection status
+        function showConnectionStatus(status, message, color) {
+            const statusDiv = document.createElement('div');
+            statusDiv.innerHTML = `
+                <div style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: ${color}; color: white; padding: 10px 20px; border-radius: 20px; z-index: 1002; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                    ${message}
+                </div>
+            `;
+            document.body.appendChild(statusDiv);
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                if (statusDiv.parentElement) {
+                    statusDiv.remove();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

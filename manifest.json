@@ -1,0 +1,43 @@
+{
+  "name": "Nepal Letter Helper - सरकारी पत्र सहायक",
+  "short_name": "Nepal Letters",
+  "description": "Professional Nepal government letter writing tool with 80+ letter formats. Works offline!",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0066cc",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "ne",
+  "categories": ["productivity", "utilities", "government"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icon-512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse All Letters",
+      "short_name": "Browse",
+      "description": "View all 80+ letter types",
+      "url": "/?action=browse",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Government Letters", 
+      "short_name": "Government",
+      "description": "Create government letters",
+      "url": "/?category=government",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
