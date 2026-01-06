@@ -1,15 +1,15 @@
 // Nepal Letter Helper - Service Worker for PWA
 const CACHE_NAME = 'nepal-letter-helper-v1.0.0';
-const OFFLINE_URL = '/offline.html';
+const OFFLINE_URL = '/nepal-letter-helper/offline.html';
 
 // Files to cache for offline use
 const CACHE_FILES = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/script.js',
-  '/manifest.json',
-  '/offline.html',
+  '/nepal-letter-helper/',
+  '/nepal-letter-helper/index.html',
+  '/nepal-letter-helper/styles.css',
+  '/nepal-letter-helper/script.js',
+  '/nepal-letter-helper/manifest.json',
+  '/nepal-letter-helper/offline.html',
   // Google Fonts (cached separately)
   'https://fonts.googleapis.com/css2?family=Kalimati:wght@400;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap'
 ];

@@ -695,10 +695,14 @@
     
     <!-- PWA Service Worker Registration -->
     <script>
+        // Debug: Log all PWA events
+        console.log('🚀 Nepal Letter Helper PWA Loading...');
+        
         // Register Service Worker for PWA functionality
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                console.log('📱 Registering Service Worker...');
+                navigator.serviceWorker.register('/nepal-letter-helper/sw.js')
                     .then((registration) => {
                         console.log('✅ Service Worker registered successfully:', registration.scope);
                         
@@ -717,6 +721,8 @@
                         console.log('❌ Service Worker registration failed:', error);
                     });
             });
+        } else {
+            console.log('❌ Service Worker not supported');
         }
         
         // PWA Install Prompt
