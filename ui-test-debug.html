@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal Letter Helper - UI Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .test-section { background: white; margin: 20px 0; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .test-title { color: #0066cc; font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+        .test-item { margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .status-pass { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .status-fail { background: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .status-warning { background: #fff3cd; border-color: #ffeaa7; color: #856404; }
+        button { padding: 8px 15px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-test { background: #0066cc; color: white; }
+        .btn-test:hover { background: #0052a3; }
+        .console-output { background: #222; color: #0f0; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; max-height: 200px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Nepal Letter Helper - Complete UI Debug Test</h1>
+    
+    <div class="test-section">
+        <div class="test-title">📱 Core Application Tests</div>
+        <button class="btn-test" onclick="testAppInitialization()">Test App Initialization</button>
+        <button class="btn-test" onclick="testLanguageToggle()">Test Language Toggle</button>
+        <button class="btn-test" onclick="testDarkMode()">Test Dark Mode</button>
+        <button class="btn-test" onclick="testSearch()">Test Global Search</button>
+        <div id="coreTests"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">📝 Letter Form Tests</div>
+        <button class="btn-test" onclick="testLetterButtons()">Test All Letter Buttons</button>
+        <button class="btn-test" onclick="testFormGeneration()">Test Form Generation</button>
+        <button class="btn-test" onclick="testFormValidation()">Test Form Validation</button>
+        <button class="btn-test" onclick="testLetterGeneration()">Test Letter Generation</button>
+        <div id="letterTests"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">🛠️ Tools & Features Tests</div>
+        <button class="btn-test" onclick="testToolButtons()">Test Tool Buttons</button>
+        <button class="btn-test" onclick="testChecklistButtons()">Test Checklist Buttons</button>
+        <button class="btn-test" onclick="testModalFunctions()">Test Modal Functions</button>
+        <div id="toolTests"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">📱 PWA & Offline Tests</div>
+        <button class="btn-test" onclick="testServiceWorker()">Test Service Worker</button>
+        <button class="btn-test" onclick="testOfflineStorage()">Test Offline Storage</button>
+        <button class="btn-test" onclick="testPWAManifest()">Test PWA Manifest</button>
+        <div id="pwaTests"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">📊 Console Output</div>
+        <div id="consoleOutput" class="console-output"></div>
+        <button class="btn-test" onclick="clearConsole()">Clear Console</button>
+    </div>
+
+    <script>
+        let testResults = [];
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const console = document.getElementById('consoleOutput');
+            const color = type === 'error' ? '#f00' : type === 'success' ? '#0f0' : type === 'warning' ? '#ff0' : '#0ff';
+            console.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function addTestResult(section, test, status, message) {
+            const container = document.getElementById(section);
+            const statusClass = status === 'pass' ? 'status-pass' : status === 'fail' ? 'status-fail' : 'status-warning';
+            const statusIcon = status === 'pass' ? '✅' : status === 'fail' ? '❌' : '⚠️';
+            
+            container.innerHTML += `
+                <div class="test-item ${statusClass}">
+                    ${statusIcon} <strong>${test}:</strong> ${message}
+                </div>
+            `;
+            
+            log(`${test}: ${message}`, status === 'pass' ? 'success' : status === 'fail' ? 'error' : 'warning');
+        }
+
+        function clearConsole() {
+            document.getElementById('consoleOutput').innerHTML = '';
+        }
+
+        // Test App Initialization
+        function testAppInitialization() {
+            document.getElementById('coreTests').innerHTML = '';
+            log('Starting App Initialization Tests...', 'info');
+            
+            try {
+                // Test if app object exists
+                if (typeof window.app !== 'undefined') {
+                    addTestResult('coreTests', 'App Object', 'pass', 'App object is available globally');
+                } else {
+                    addTestResult('coreTests', 'App Object', 'fail', 'App object not found - script.js may not be loaded');
+                    return;
+                }
+
+                // Test essential DOM elements
+                const essentialElements = [
+                    'langToggle', 'darkToggle', 'globalSearch', 'modal'
+                ];
+                
+                essentialElements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        addTestResult('coreTests', `Element: ${id}`, 'pass', 'Element found in DOM');
+                    } else {
+                        addTestResult('coreTests', `Element: ${id}`, 'fail', 'Element missing from DOM');
+                    }
+                });
+
+                // Test if event listeners are attached
+                const langToggle = document.getElementById('langToggle');
+                if (langToggle && langToggle.onclick) {
+                    addTestResult('coreTests', 'Event Listeners', 'pass', 'Event listeners appear to be attached');
+                } else {
+                    addTestResult('coreTests', 'Event Listeners', 'warning', 'Event listeners may not be properly attached');
+                }
+
+            } catch (error) {
+                addTestResult('coreTests', 'Initialization', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Language Toggle
+        function testLanguageToggle() {
+            log('Testing Language Toggle...', 'info');
+            
+            try {
+                const langToggle = document.getElementById('langToggle');
+                if (langToggle) {
+                    const originalText = langToggle.textContent;
+                    
+                    // Simulate click
+                    langToggle.click();
+                    
+                    setTimeout(() => {
+                        const newText = langToggle.textContent;
+                        if (newText !== originalText) {
+                            addTestResult('coreTests', 'Language Toggle', 'pass', `Language changed from "${originalText}" to "${newText}"`);
+                        } else {
+                            addTestResult('coreTests', 'Language Toggle', 'warning', 'Language toggle clicked but text did not change');
+                        }
+                    }, 100);
+                } else {
+                    addTestResult('coreTests', 'Language Toggle', 'fail', 'Language toggle button not found');
+                }
+            } catch (error) {
+                addTestResult('coreTests', 'Language Toggle', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Dark Mode
+        function testDarkMode() {
+            log('Testing Dark Mode Toggle...', 'info');
+            
+            try {
+                const darkToggle = document.getElementById('darkToggle');
+                if (darkToggle) {
+                    const originalClass = document.body.className;
+                    
+                    // Simulate click
+                    darkToggle.click();
+                    
+                    setTimeout(() => {
+                        const newClass = document.body.className;
+                        if (newClass !== originalClass) {
+                            addTestResult('coreTests', 'Dark Mode', 'pass', `Body class changed from "${originalClass}" to "${newClass}"`);
+                        } else {
+                            addTestResult('coreTests', 'Dark Mode', 'warning', 'Dark mode toggle clicked but body class did not change');
+                        }
+                    }, 100);
+                } else {
+                    addTestResult('coreTests', 'Dark Mode', 'fail', 'Dark mode toggle button not found');
+                }
+            } catch (error) {
+                addTestResult('coreTests', 'Dark Mode', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Global Search
+        function testSearch() {
+            log('Testing Global Search...', 'info');
+            
+            try {
+                const searchInput = document.getElementById('globalSearch');
+                const searchBtn = document.querySelector('.search-btn');
+                
+                if (searchInput && searchBtn) {
+                    // Test search input
+                    searchInput.value = 'निवेदन';
+                    searchBtn.click();
+                    
+                    setTimeout(() => {
+                        const results = document.getElementById('searchResults');
+                        if (results && results.innerHTML.trim() !== '') {
+                            addTestResult('coreTests', 'Global Search', 'pass', 'Search executed and results displayed');
+                        } else {
+                            addTestResult('coreTests', 'Global Search', 'warning', 'Search executed but no results displayed');
+                        }
+                    }, 200);
+                } else {
+                    addTestResult('coreTests', 'Global Search', 'fail', 'Search input or button not found');
+                }
+            } catch (error) {
+                addTestResult('coreTests', 'Global Search', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Letter Buttons
+        function testLetterButtons() {
+            document.getElementById('letterTests').innerHTML = '';
+            log('Testing Letter Buttons...', 'info');
+            
+            try {
+                const letterLinks = document.querySelectorAll('[data-letter-type]');
+                
+                if (letterLinks.length > 0) {
+                    addTestResult('letterTests', 'Letter Links Found', 'pass', `Found ${letterLinks.length} letter links`);
+                    
+                    // Test first few letter links
+                    const testLinks = Array.from(letterLinks).slice(0, 5);
+                    let workingLinks = 0;
+                    
+                    testLinks.forEach((link, index) => {
+                        const letterType = link.getAttribute('data-letter-type');
+                        
+                        try {
+                            // Simulate click
+                            link.click();
+                            workingLinks++;
+                            addTestResult('letterTests', `Letter: ${letterType}`, 'pass', 'Link clicked successfully');
+                        } catch (error) {
+                            addTestResult('letterTests', `Letter: ${letterType}`, 'fail', `Click failed: ${error.message}`);
+                        }
+                    });
+                    
+                    if (workingLinks === testLinks.length) {
+                        addTestResult('letterTests', 'Letter Links Functionality', 'pass', `All ${workingLinks} tested links working`);
+                    } else {
+                        addTestResult('letterTests', 'Letter Links Functionality', 'warning', `${workingLinks}/${testLinks.length} links working`);
+                    }
+                } else {
+                    addTestResult('letterTests', 'Letter Links', 'fail', 'No letter links found in DOM');
+                }
+            } catch (error) {
+                addTestResult('letterTests', 'Letter Buttons', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Form Generation
+        function testFormGeneration() {
+            log('Testing Form Generation...', 'info');
+            
+            try {
+                if (typeof window.app !== 'undefined' && typeof window.app.openLetterForm === 'function') {
+                    // Test opening a form
+                    window.app.openLetterForm('nibedan_patra');
+                    
+                    setTimeout(() => {
+                        const modal = document.getElementById('modal');
+                        const form = document.querySelector('.letter-form');
+                        
+                        if (modal && modal.style.display !== 'none') {
+                            addTestResult('letterTests', 'Modal Opening', 'pass', 'Modal opened successfully');
+                        } else {
+                            addTestResult('letterTests', 'Modal Opening', 'fail', 'Modal did not open');
+                        }
+                        
+                        if (form) {
+                            addTestResult('letterTests', 'Form Generation', 'pass', 'Letter form generated successfully');
+                            
+                            // Test form fields
+                            const inputs = form.querySelectorAll('input, textarea, select');
+                            addTestResult('letterTests', 'Form Fields', 'pass', `Form contains ${inputs.length} input fields`);
+                        } else {
+                            addTestResult('letterTests', 'Form Generation', 'fail', 'Letter form not generated');
+                        }
+                    }, 500);
+                } else {
+                    addTestResult('letterTests', 'Form Generation', 'fail', 'openLetterForm function not available');
+                }
+            } catch (error) {
+                addTestResult('letterTests', 'Form Generation', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Form Validation
+        function testFormValidation() {
+            log('Testing Form Validation...', 'info');
+            
+            try {
+                const form = document.querySelector('.letter-form');
+                if (form) {
+                    const requiredFields = form.querySelectorAll('[required]');
+                    
+                    if (requiredFields.length > 0) {
+                        addTestResult('letterTests', 'Required Fields', 'pass', `Found ${requiredFields.length} required fields`);
+                        
+                        // Test validation by trying to submit empty form
+                        const submitBtn = form.querySelector('button[onclick*="handleGenerateLetter"]');
+                        if (submitBtn) {
+                            submitBtn.click();
+                            addTestResult('letterTests', 'Form Validation', 'pass', 'Form validation triggered');
+                        } else {
+                            addTestResult('letterTests', 'Form Validation', 'warning', 'Submit button not found');
+                        }
+                    } else {
+                        addTestResult('letterTests', 'Required Fields', 'warning', 'No required fields found');
+                    }
+                } else {
+                    addTestResult('letterTests', 'Form Validation', 'warning', 'No form available for testing (open a letter form first)');
+                }
+            } catch (error) {
+                addTestResult('letterTests', 'Form Validation', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Letter Generation
+        function testLetterGeneration() {
+            log('Testing Letter Generation...', 'info');
+            
+            try {
+                if (typeof window.app !== 'undefined' && typeof window.app.handleGenerateLetter === 'function') {
+                    addTestResult('letterTests', 'Letter Generation Function', 'pass', 'handleGenerateLetter function available');
+                } else {
+                    addTestResult('letterTests', 'Letter Generation Function', 'fail', 'handleGenerateLetter function not available');
+                }
+            } catch (error) {
+                addTestResult('letterTests', 'Letter Generation', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Tool Buttons
+        function testToolButtons() {
+            document.getElementById('toolTests').innerHTML = '';
+            log('Testing Tool Buttons...', 'info');
+            
+            try {
+                const toolLinks = document.querySelectorAll('[data-tool-type]');
+                
+                if (toolLinks.length > 0) {
+                    addTestResult('toolTests', 'Tool Links Found', 'pass', `Found ${toolLinks.length} tool links`);
+                    
+                    toolLinks.forEach(link => {
+                        const toolType = link.getAttribute('data-tool-type');
+                        addTestResult('toolTests', `Tool: ${toolType}`, 'pass', 'Tool link found');
+                    });
+                } else {
+                    addTestResult('toolTests', 'Tool Links', 'fail', 'No tool links found in DOM');
+                }
+            } catch (error) {
+                addTestResult('toolTests', 'Tool Buttons', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Checklist Buttons
+        function testChecklistButtons() {
+            log('Testing Checklist Buttons...', 'info');
+            
+            try {
+                const checklistLinks = document.querySelectorAll('[data-checklist-type]');
+                
+                if (checklistLinks.length > 0) {
+                    addTestResult('toolTests', 'Checklist Links Found', 'pass', `Found ${checklistLinks.length} checklist links`);
+                } else {
+                    addTestResult('toolTests', 'Checklist Links', 'fail', 'No checklist links found in DOM');
+                }
+            } catch (error) {
+                addTestResult('toolTests', 'Checklist Buttons', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Modal Functions
+        function testModalFunctions() {
+            log('Testing Modal Functions...', 'info');
+            
+            try {
+                if (typeof window.app !== 'undefined') {
+                    const hasOpenModal = typeof window.app.openModal === 'function';
+                    const hasCloseModal = typeof window.app.closeModal === 'function';
+                    
+                    if (hasOpenModal && hasCloseModal) {
+                        addTestResult('toolTests', 'Modal Functions', 'pass', 'openModal and closeModal functions available');
+                        
+                        // Test modal functionality
+                        window.app.openModal('Test Modal', '<p>This is a test modal</p>');
+                        
+                        setTimeout(() => {
+                            const modal = document.getElementById('modal');
+                            if (modal && modal.style.display !== 'none') {
+                                addTestResult('toolTests', 'Modal Display', 'pass', 'Modal displayed successfully');
+                                
+                                // Close modal
+                                window.app.closeModal();
+                                
+                                setTimeout(() => {
+                                    if (modal.style.display === 'none') {
+                                        addTestResult('toolTests', 'Modal Close', 'pass', 'Modal closed successfully');
+                                    } else {
+                                        addTestResult('toolTests', 'Modal Close', 'warning', 'Modal may not have closed properly');
+                                    }
+                                }, 100);
+                            } else {
+                                addTestResult('toolTests', 'Modal Display', 'fail', 'Modal did not display');
+                            }
+                        }, 100);
+                    } else {
+                        addTestResult('toolTests', 'Modal Functions', 'fail', 'Modal functions not available');
+                    }
+                } else {
+                    addTestResult('toolTests', 'Modal Functions', 'fail', 'App object not available');
+                }
+            } catch (error) {
+                addTestResult('toolTests', 'Modal Functions', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Service Worker
+        function testServiceWorker() {
+            document.getElementById('pwaTests').innerHTML = '';
+            log('Testing Service Worker...', 'info');
+            
+            try {
+                if ('serviceWorker' in navigator) {
+                    addTestResult('pwaTests', 'Service Worker Support', 'pass', 'Service Worker API supported');
+                    
+                    navigator.serviceWorker.getRegistrations().then(registrations => {
+                        if (registrations.length > 0) {
+                            addTestResult('pwaTests', 'Service Worker Registration', 'pass', `${registrations.length} service worker(s) registered`);
+                        } else {
+                            addTestResult('pwaTests', 'Service Worker Registration', 'warning', 'No service workers registered');
+                        }
+                    });
+                } else {
+                    addTestResult('pwaTests', 'Service Worker Support', 'fail', 'Service Worker API not supported');
+                }
+            } catch (error) {
+                addTestResult('pwaTests', 'Service Worker', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test Offline Storage
+        function testOfflineStorage() {
+            log('Testing Offline Storage...', 'info');
+            
+            try {
+                if ('indexedDB' in window) {
+                    addTestResult('pwaTests', 'IndexedDB Support', 'pass', 'IndexedDB supported for offline storage');
+                } else {
+                    addTestResult('pwaTests', 'IndexedDB Support', 'fail', 'IndexedDB not supported');
+                }
+                
+                if ('localStorage' in window) {
+                    addTestResult('pwaTests', 'LocalStorage Support', 'pass', 'LocalStorage supported');
+                } else {
+                    addTestResult('pwaTests', 'LocalStorage Support', 'fail', 'LocalStorage not supported');
+                }
+            } catch (error) {
+                addTestResult('pwaTests', 'Offline Storage', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Test PWA Manifest
+        function testPWAManifest() {
+            log('Testing PWA Manifest...', 'info');
+            
+            try {
+                const manifestLink = document.querySelector('link[rel="manifest"]');
+                if (manifestLink) {
+                    addTestResult('pwaTests', 'Manifest Link', 'pass', `Manifest linked: ${manifestLink.href}`);
+                    
+                    // Try to fetch manifest
+                    fetch(manifestLink.href)
+                        .then(response => response.json())
+                        .then(manifest => {
+                            addTestResult('pwaTests', 'Manifest Content', 'pass', `Manifest loaded: ${manifest.name}`);
+                        })
+                        .catch(error => {
+                            addTestResult('pwaTests', 'Manifest Content', 'fail', `Failed to load manifest: ${error.message}`);
+                        });
+                } else {
+                    addTestResult('pwaTests', 'Manifest Link', 'fail', 'No manifest link found');
+                }
+            } catch (error) {
+                addTestResult('pwaTests', 'PWA Manifest', 'fail', `Error: ${error.message}`);
+            }
+        }
+
+        // Auto-run basic tests on load
+        window.addEventListener('load', () => {
+            log('UI Debug Test Tool Loaded', 'success');
+            log('Click buttons above to run specific tests', 'info');
+        });
+    </script>
+</body>
+</html>

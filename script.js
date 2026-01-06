@@ -739,9 +739,45 @@ class NepalLetterHelper {
     }
 
     init() {
+        console.log('🚀 Nepal Letter Helper - Initializing...');
         this.setupEventListeners();
         this.applyTheme();
         this.updateLanguage();
+        this.initializeOfflineStorage();
+        
+        // Debug mode detection
+        if (window.location.search.includes('debug=true')) {
+            this.enableDebugMode();
+        }
+        
+        console.log('✅ Nepal Letter Helper - Initialized successfully');
+    }
+    
+    enableDebugMode() {
+        console.log('🔍 Debug mode enabled');
+        
+        // Add debug panel
+        const debugPanel = document.createElement('div');
+        debugPanel.id = 'debugPanel';
+        debugPanel.style.cssText = `
+            position: fixed; top: 10px; right: 10px; z-index: 9999;
+            background: rgba(0,0,0,0.8); color: white; padding: 10px;
+            border-radius: 5px; font-family: monospace; font-size: 12px;
+            max-width: 300px; max-height: 200px; overflow-y: auto;
+        `;
+        debugPanel.innerHTML = '<strong>🔍 Debug Console</strong><div id="debugLog"></div>';
+        document.body.appendChild(debugPanel);
+        
+        // Override console.log for debug panel
+        const originalLog = console.log;
+        console.log = (...args) => {
+            originalLog(...args);
+            const debugLog = document.getElementById('debugLog');
+            if (debugLog) {
+                debugLog.innerHTML += '<div>' + args.join(' ') + '</div>';
+                debugLog.scrollTop = debugLog.scrollHeight;
+            }
+        };
     }
 
     setupEventListeners() {
@@ -1591,6 +1627,8 @@ class NepalLetterHelper {
     }
 
     handleGenerateLetter(letterType, category) {
+        console.log('Generating letter:', letterType, category);
+        
         const form = document.querySelector('.letter-form');
         if (!form) {
             alert('Form not found. Please try again.');
@@ -1598,6 +1636,47 @@ class NepalLetterHelper {
         }
 
         const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        
+        // Enhanced validation with visual feedback
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+        let firstInvalidField = null;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.style.borderColor = '#d4351c';
+                field.style.backgroundColor = '#fdf2f2';
+                isValid = false;
+                if (!firstInvalidField) firstInvalidField = field;
+            } else {
+                field.style.borderColor = '#0b0c0c';
+                field.style.backgroundColor = 'white';
+            }
+        });
+        
+        if (!isValid) {
+            alert('कृपया सबै आवश्यक फिल्डहरू भर्नुहोस् / Please fill in all required fields (marked with *)');
+            if (firstInvalidField) {
+                firstInvalidField.focus();
+                firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return;
+        }
+        
+        // Generate letter
+        try {
+            const letterHTML = this.createLetterHTML(letterType, category, data);
+            this.openModal('Generated Letter / तयार गरिएको पत्र', letterHTML);
+            
+            // Save draft for offline access
+            this.saveDraft(letterType, data);
+            
+        } catch (error) {
+            console.error('Letter generation failed:', error);
+            alert('पत्र तयार गर्न समस्या भयो। कृपया पुनः प्रयास गर्नुहोस् / Error generating letter. Please try again.');
+        }
+    }
         const data = Object.fromEntries(formData);
         const selectedLanguage = document.getElementById('letterLanguage')?.value || 'nepali';
         
